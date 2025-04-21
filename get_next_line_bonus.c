@@ -1,58 +1,60 @@
-#include <fcntl.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: feazeved <feazeved@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/21 17:52:05 by feazeved          #+#    #+#             */
+/*   Updated: 2025/04/21 18:36:58 by feazeved         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-typedef struct s_list
+#include "get_next_line.h"
+
+t_list	*ft_get_fd(int fd, t_list **head)
 {
-  int fd;
-  char  *buffer;
-  struct s_list *next; 
-} t_list;
+	t_list *node;
 
-t_list *ft_get_fd(int fd, t_list **head)
-{
-  t_list *node;
-
-  node = *head;
-  while (node)
-  {
-    if (node->fd == fd)
-      return (node);
-    node = node->next;
-  }
-  node = malloc(sizeof(t_list));
-  if (!node)
-    return (NULL);
-  node->fd = fd;
-  node->buffer = NULL;
-  node->next = *head;
-  *head = node;
-  return (node);
+	node = *head;
+	while (node)
+	{
+		if (node->fd == fd)
+			return (node);
+		node = node->next;
+	}
+	node = malloc(sizeof(t_list));
+	if (!node)
+		return (NULL);
+	node->fd = fd;
+	node->buffer = NULL;
+	node->next = *head;
+	*head = node;
+	return (node);
 }
 
-void ft_free_node(t_list **head, int fd)
+void	ft_free_node(t_list **head, int fd)
 {
-  t_list *current;
-  t_list *previous;
+	t_list *current;
+	t_list *previous;
 
-  previous = NULL;
-  current = *head;
-  while (current)
-  {
-    if (current->fd == fd)
-    {
+	previous = NULL;
+	current = *head;
+	while (current)
+	{
+   	 if (current->fd == fd)
+   	 {
       if (previous)
         previous->next = current->next;
       else
         *head = current->next;
       free(current->buffer);
       free(current);
-      return ;
-    }
-    previous = current;
-    current = current->next;
-  }
+			return ;
+		}
+		previous = current;
+		current = current->next;
+	}
 }
 
 int ft_isnewline(char *buffer)
