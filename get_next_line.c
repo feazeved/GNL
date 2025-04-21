@@ -6,37 +6,11 @@
 /*   By: feazeved <feazeved@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 17:06:49 by feazeved          #+#    #+#             */
-/*   Updated: 2025/04/21 21:55:16 by feazeved         ###   ########.fr       */
+/*   Updated: 2025/04/21 22:36:27 by feazeved         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-char	*ft_clean(char *buffer)
-{
-	char	*clean_line;
-	int		i;
-	int		j;
-
-	j = 0;
-	while (buffer[j] != '\n' && buffer[j])
-		j++;
-	if (!buffer[j])
-		return (free(buffer), NULL);
-	j++;
-	i = 0;
-	while (buffer[j + i])
-		i++;
-	clean_line = malloc(sizeof(char) * (i + 1));
-	if (!clean_line)
-		return (free(buffer), NULL);
-	i = 0;
-	while (buffer[j])
-		clean_line[i++] = buffer[j++];
-	clean_line[i] = '\0';
-	free(buffer);
-	return (clean_line);
-}
 
 char	*ft_line(char *buffer)
 {
@@ -66,7 +40,7 @@ char	*ft_line(char *buffer)
 	return (line);
 }
 
-char	*ft_strjoin_and_free(char *old, const char *temp)
+char	*ft_strjoin_and_free(char *old, char *temp)
 {
 	int		i;
 	int		j;
@@ -92,31 +66,26 @@ char	*ft_strjoin_and_free(char *old, const char *temp)
 	return (free(old), new);
 }
 
-void	ft_strcpycat(char **new, char *temp, char *old)
+void	ft_strcpycat(char **new, char *old, char *temp)
 {
 	int	i;
 	int	j;
 
-	i = 0;
-	j = 0;
-	while (old[i])
-	{
+	i = -1;
+	j = -1;
+	while (old[++i])
 		(*new)[i] = old[i];
-		i++;
-	}
-	while (temp[j])
-	{
+	while (temp[++j])
 		(*new)[i + j] = temp[j];
-		j++;
-	}
+	(*new)[i + j] = '\0';
 }
 
 int	ft_initial_conditions(int fd, t_list **head, t_list **node)
 {
 	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
 		return (0);
-	*node = ft_get_fd(fd, &head);
-	if (!node)
+	*node = ft_get_fd(fd, head);
+	if (!(*node))
 		return (0);
 	return (1);
 }

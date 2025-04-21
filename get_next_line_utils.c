@@ -6,7 +6,7 @@
 /*   By: feazeved <feazeved@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/21 21:22:37 by feazeved          #+#    #+#             */
-/*   Updated: 2025/04/21 21:34:23 by feazeved         ###   ########.fr       */
+/*   Updated: 2025/04/21 21:57:41 by feazeved         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,32 @@ int ft_isnewline(char *buffer)
         i++;
     }
     return (0);
+}
+
+char    *ft_clean(char *buffer)
+{
+    char    *clean_line;
+    int     i;
+    int     j;
+
+    j = 0;
+    while (buffer[j] != '\n' && buffer[j])
+        j++;
+    if (!buffer[j])
+        return (free(buffer), NULL);
+    j++;
+    i = 0;
+    while (buffer[j + i])
+        i++;
+    clean_line = malloc(sizeof(char) * (i + 1));
+    if (!clean_line)
+        return (free(buffer), NULL);
+    i = 0;
+    while (buffer[j])
+        clean_line[i++] = buffer[j++];
+    clean_line[i] = '\0';
+    free(buffer);
+    return (clean_line);
 }
 
 t_list  *ft_get_fd(int fd, t_list **head)
