@@ -5,135 +5,57 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: feazeved <feazeved@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/21 17:06:49 by feazeved          #+#    #+#             */
-/*   Updated: 2025/04/24 05:51:18 by feazeved         ###   ########.fr       */
+/*   Created: 2025/04/25 04:01:40 by feazeved          #+#    #+#             */
+/*   Updated: 2025/04/25 11:37:22 by feazeved         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_line(char *buffer)
-{
-	int		i;
-	int		j;
-	char	*line;
-
-	if (!buffer)
-		return (NULL);
-	i = 0;
-	while (buffer[i] && buffer[i] != '\n')
-		i++;
-	if (buffer[i] == '\n')
-		i++;
-	line = malloc(sizeof(char) * (i + 1));
-	if (!line)
-		return (NULL);
-	j = 0;
-	while (buffer[j] && buffer[j] != '\n')
-	{
-		line[j] = buffer[j];
-		j++;
-	}
-	if (buffer[j] == '\n')
-		line[j++] = '\n';
-	line[j] = '\0';
-	return (line);
-}
-
-char	*ft_strjoin_and_free(char *old, char *temp)
-{
-	int		i;
-	int		j;
-	char	*new;
-
-	if (!old)
-	{
-		old = malloc(1);
-		if (!old)
-			return (NULL);
-		old[0] = '\0';
-	}
-	i = 0;
-	while (old[i])
-		i++;
-	j = 0;
-	while (temp[j])
-		j++;
-	new = malloc(sizeof(char) * (i + j + 1));
-	if (!new)
-		return (free(old), NULL);
-	ft_strcpycat(&new, old, temp);
-	return (free(old), new);
-}
-
-void	ft_strcpycat(char **new, char *old, char *temp)
-{
-	int	i;
-	int	j;
-
-	i = -1;
-	j = -1;
-	while (old[++i])
-		(*new)[i] = old[i];
-	while (temp[++j])
-		(*new)[i + j] = temp[j];
-	(*new)[i + j] = '\0';
-}
-
-int	ft_initial_conditions(int fd, t_list **head, t_list **node)
-{
-	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, 0, 0) < 0)
-		return (0);
-	*node = ft_get_fd(fd, head);
-	if (!(*node))
-		return (0);
-	return (1);
-}
-
 char	*get_next_line(int fd)
 {
-	static t_list	*head = NULL;
-	t_list			*node;
-	char			temp[BUFFER_SIZE + 1];
-	int				num_read;
-	char			*line;
+	static char	buffer[BUFFER_SIZE + 1];
+	char		*line;
+	int			br;
+	int			num_read;
 
-	if (!ft_initial_conditions(fd, &head, &node))
+	if (BUFFER_SIZE <= 0 || fd < 0)
 		return (NULL);
-	while (!ft_isnewline(node->buffer))
+	ft_initializer(&line, &br, &num_read);
+	while (!br)
 	{
-		num_read = read(fd, temp, BUFFER_SIZE);
-		if (num_read <= 0)
-			break ;
-		temp[num_read] = '\0';
-		node->buffer = ft_strjoin_and_free(node->buffer, temp);
-		if (!node->buffer)
-			return (ft_free_node(&head, fd), NULL);
+		if (!buffer[0])
+		{
+			num_read = read(fd, buffer, BUFFER_SIZE);
+			if (num_read == -1)
+				return (free(line), NULL);
+			if (num_read == 0)
+				break ;
+			buffer[num_read] = '\0';
+		}
+		line = ft_str_join_and_free(line, buffer);
+		if (!line)
+			return (NULL);
+		br = ft_clean_buffer(buffer);
 	}
-	if (!node->buffer || node->buffer[0] == '\0')
-		return (ft_free_node(&head, fd), NULL);
-	line = ft_line(node->buffer);
-	node->buffer = ft_clean(node->buffer);
-	if (!node->buffer)
-		ft_free_node(&head, fd);
 	return (line);
 }
 /*
-#include <stdio.h> 
-int main(int argc, char *argv[])
+int	main(void)
 {
 	int	fd;
-	int	lines;
-	int	i = 0;
-	char	*retorno;
+	char	*line;
 
-	lines = atoi(argv[2]);
-	fd = open(argv[1], O_RDONLY);
-	while (i++ != lines)
+	fd = open("get_next_line.c", O_RDONLY);
+	if (fd == -1)
 	{
-		retorno = get_next_line(fd);
-		printf("%s", retorno);
-		free(retorno);
+		printf("error\n");
+		return (1);
+	}
+	while ((line = get_next_line(fd)))
+	{
+		printf("%s", line);
+		free(line);
 	}
 	close(fd);
 	return (0);

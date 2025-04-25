@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: feazeved <feazeved@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/21 17:07:35 by feazeved          #+#    #+#             */
-/*   Updated: 2025/04/24 05:50:11 by feazeved         ###   ########.fr       */
+/*   Created: 2025/04/25 04:02:04 by feazeved          #+#    #+#             */
+/*   Updated: 2025/04/25 12:09:27 by feazeved         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,25 +17,15 @@
 #  define BUFFER_SIZE 42
 # endif
 
-# include <unistd.h>
-# include <fcntl.h>
 # include <stdlib.h>
+# include <fcntl.h>
+# include <unistd.h>
+# include <stdio.h>
 
-typedef struct s_list
-{
-	int				fd;
-	char			*buffer;
-	struct s_list	*next;
-}	t_list;
-
-t_list	*ft_get_fd(int fd, t_list **head);
-void	ft_free_node(t_list **head, int fd);
-int		ft_isnewline(char *buffer);
-char	*ft_clean(char *buffer);
-char	*ft_line(char *buffer);
-char	*ft_strjoin_and_free(char *old, char *temp);
+void	ft_initializer(char **line, int *br, int *num_read);
 char	*get_next_line(int fd);
-int		ft_initial_conditions(int fd, t_list **head, t_list **node);
-void	ft_strcpycat(char **new, char *temp, char *old);
+int		ft_strlen_line(char *str);
+int		ft_clean_buffer(char *buffer);
+char	*ft_str_join_and_free(char *old, char *buffer);
 
 #endif
