@@ -6,7 +6,7 @@
 /*   By: feazeved <feazeved@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 11:43:01 by feazeved          #+#    #+#             */
-/*   Updated: 2025/04/25 13:42:00 by feazeved         ###   ########.fr       */
+/*   Updated: 2025/04/27 03:51:54 by feazeved         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,18 +17,11 @@
 #  define BUFFER_SIZE 42
 # endif
 
-# ifndef OPEN_MAX
-#  define OPEN_MAX 1024
-# endif
-
-# include <stdio.h>
 # include <unistd.h>
-# include <fcntl.h>
 # include <stdlib.h>
 
-char	*ft_read_line(char buffer[OPEN_MAX][BUFFER_SIZE + 1], int fd);
-void	ft_free(char *buffer);
-void	ft_initializer(char **line, int *br, int *num_read);
+void	*ft_calloc(size_t nmemb, size_t size);
+char	*ft_read_line(char *buffer, int fd);
 char	*get_next_line(int fd);
 int		ft_strlen_line(char *str);
 int		ft_clean_buffer(char *buffer);

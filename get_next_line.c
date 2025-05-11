@@ -6,7 +6,7 @@
 /*   By: feazeved <feazeved@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/25 04:01:40 by feazeved          #+#    #+#             */
-/*   Updated: 2025/04/25 11:37:22 by feazeved         ###   ########.fr       */
+/*   Updated: 2025/05/11 20:26:37 by feazeved         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ char	*get_next_line(int fd)
 				return (free(line), NULL);
 			if (num_read == 0)
 				break ;
-			buffer[num_read] = '\0';
 		}
 		line = ft_str_join_and_free(line, buffer);
 		if (!line)
@@ -40,23 +39,3 @@ char	*get_next_line(int fd)
 	}
 	return (line);
 }
-/*
-int	main(void)
-{
-	int	fd;
-	char	*line;
-
-	fd = open("get_next_line.c", O_RDONLY);
-	if (fd == -1)
-	{
-		printf("error\n");
-		return (1);
-	}
-	while ((line = get_next_line(fd)))
-	{
-		printf("%s", line);
-		free(line);
-	}
-	close(fd);
-	return (0);
-}*/
